@@ -1,4 +1,4 @@
-# Image Processing API
+# Store front API
 
 ## Overview
 
