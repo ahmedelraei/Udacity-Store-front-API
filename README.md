@@ -64,7 +64,7 @@ We shall create the dev and test database.
 
 Navigate to the root directory and run the command below to migrate the database
 `yarn dev-up`
-!['migrate database'](./docs/migrate_up.png)
+!['migrate database'](./docs/migrate-up.png)
 
 ## Enviromental Variables Set up
 
