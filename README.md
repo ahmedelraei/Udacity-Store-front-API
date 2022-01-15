@@ -48,22 +48,23 @@ We shall create the dev and test database.
 
 - connect to the default postgres database as the server's root user `psql -U postgres`
 - In psql run the following to create a user
-  - `CREATE USER shopping_user WITH PASSWORD 'password123';`
+  - `CREATE USER store_user WITH PASSWORD 'admin@12345678';`
 - In psql run the following to create the dev and test database
-  - `CREATE DATABASE shopping;`
-  - `CREATE DATABASE shopping_test;`
+  - `CREATE DATABASE storedb;`
+  - `CREATE DATABASE storedb_test;`
 - Connect to the databases and grant all privileges
   - Grant for dev database
-    - `\c shopping`
-    - `GRANT ALL PRIVILEGES ON DATABASE shopping TO shopping_user;`
+    - `\c storedb`
+    - `GRANT ALL PRIVILEGES ON DATABASE storedb TO store_user;`
   - Grant for test database
-    - `\c shopping_test`
-    - `GRANT ALL PRIVILEGES ON DATABASE shopping_test TO shopping_user;`
+    - `\c storedb_test`
+    - `GRANT ALL PRIVILEGES ON DATABASE storedb_test TO store_user;`
 
 ### Migrate Database
 
 Navigate to the root directory and run the command below to migrate the database
 `yarn dev-up`
+!['migrate database'](./docs/migrate_up.png)
 
 ## Enviromental Variables Set up
 
