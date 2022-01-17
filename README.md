@@ -68,7 +68,7 @@ Navigate to the root directory and run the command below to migrate the database
 
 ## Enviromental Variables Set up
 
-Bellow are the environmental variables that needs to be set in a `.env` file. This is the default setting that I used for development, but you can change it to what works for you.
+Below are the environmental variables that needs to be set in a `.env` file. This is the default setting that I used for development, but you can change it to what works for you.
 
 **NB:** The given values are used in developement and testing but not in production.
 
