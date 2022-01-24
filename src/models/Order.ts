@@ -1,5 +1,6 @@
 import { OrderReturnType, OrderType } from '../interfaces/Order'
 import { pool } from '../db'
+import { OrderProducts } from './Order_products'
 
 export class Order {
   // define table
@@ -9,7 +10,7 @@ export class Order {
   async getOrders(userId: number): Promise<OrderReturnType[]> {
     try {
       const conn = await pool.connect()
-      const sql = `SELECT * FROM ${this.table} WHERE user_id=$1`
+      const sql = `SELECT * FROM ${this.table} INNER JOIN order_products ON orders.id=order_products.order_id WHERE user_id=$1`
       const result = await conn.query(sql, [userId])
       conn.release()
 
@@ -23,7 +24,7 @@ export class Order {
   async getCurrentOrderByUserId(userId: number): Promise<OrderReturnType> {
     try {
       const conn = await pool.connect()
-      const sql = `SELECT * FROM ${this.table} WHERE user_id = ${userId} ORDER BY id DESC LIMIT 1`
+      const sql = `SELECT * FROM ${this.table} INNER JOIN order_products ON orders.id=order_products.order_id WHERE user_id = ${userId}`
       const result = await conn.query(sql)
       conn.release()
 
@@ -34,15 +35,15 @@ export class Order {
   }
 
   // Get active order by user id
-  async getActiveOrdersByUserId(userId: number): Promise<OrderReturnType[]> {
+  async getActiveOrdersByUserId(userId: number): Promise<OrderReturnType> {
     try {
       const status = 'active'
       const conn = await pool.connect()
-      const sql = `SELECT * FROM ${this.table} WHERE user_id = ${userId} AND status = $1`
+      const sql = `SELECT * FROM ${this.table} INNER JOIN order_products ON orders.id=order_products.order_id WHERE user_id = ${userId} AND status=$1`
       const result = await conn.query(sql, [status])
       conn.release()
 
-      return result.rows
+      return result.rows[0]
     } catch (err) {
       throw new Error(`Could not get active order. Error: ${err}`)
     }
@@ -53,8 +54,8 @@ export class Order {
     try {
       const status = 'complete'
       const conn = await pool.connect()
-      const sql = `SELECT * FROM ${this.table} WHERE user_id = ${userId} AND status = $1`
-      const result = await conn.query(sql, [status])
+      const sql = `SELECT * FROM ${this.table} INNER JOIN order_products ON orders.id=order_products.order_id WHERE user_id=$1 AND status=$2`
+      const result = await conn.query(sql, [userId, status])
       conn.release()
 
       return result.rows
@@ -66,22 +67,27 @@ export class Order {
   // create an order
   async createOrder(order: OrderType): Promise<OrderReturnType> {
     try {
-      // eslint-disable-next-line camelcase
-      const { product_id, quantity, user_id, status } = order
-
+      const { user_id, order_products } = order
       const conn = await pool.connect()
-      const sql = `INSERT INTO ${this.table} (product_id, quantity, user_id, status) VALUES($1, $2, $3, $4) RETURNING *`
-      const result = await conn.query(sql, [
-        // eslint-disable-next-line camelcase
-        product_id,
-        quantity,
-        // eslint-disable-next-line camelcase
-        user_id,
-        status,
-      ])
-      conn.release()
+      let result = await conn.query(
+        `SELECT * FROM ${this.table} WHERE user_id=${user_id}`
+      )
+      if (result.rows.length === 0) {
+        const sql = `INSERT INTO ${this.table} (user_id, status) VALUES($1, $2) RETURNING *`
+        result = await conn.query(sql, [user_id, 'active'])
 
-      return result.rows[0]
+        conn.release()
+      }
+
+      const orderProducts = new OrderProducts()
+      console.log(result)
+      await orderProducts.createOrderProduct({
+        product_id: order_products[0].product_id,
+        order_id: result.rows[0].id,
+        quantity: order_products[0].quantity,
+      })
+      console.log(result.rows[0])
+      return this.getActiveOrdersByUserId(user_id)
     } catch (err) {
       throw new Error(`Could not create order. Error: ${err}`)
     }
@@ -104,6 +110,7 @@ export class Order {
     }
   }
 
+  // delete an order
   async deleteOrder(id: number): Promise<OrderReturnType> {
     try {
       const sql = `DELETE FROM ${this.table} WHERE id=$1 RETURNING *`

@@ -5,7 +5,7 @@
   "author": "Ahmed Hatem Elraei",
   "license": "MIT",
   "scripts": {
-    "dev": "yarn build && nodemon build/index.ts",
+    "dev": "yarn build && nodemon build/index.js",
     "start": "nodemon src/index.ts",
     "build": "npx tsc",
     "test": "yarn build && yarn run test-up && cross-env ENVI=test jasmine && yarn run test-down",

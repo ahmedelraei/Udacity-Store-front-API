@@ -7,6 +7,12 @@ import { OrderReturnType } from '../../interfaces/Order'
 
 const order: Order = new Order()
 
+interface OrderUpdateReturnType {
+  id: number
+  user_id: number
+  status: string
+}
+
 describe('Order Model', () => {
   it('should have an getCurrentOrderByUserId  method', () => {
     expect(order.getCurrentOrderByUserId).toBeDefined()
@@ -52,17 +58,22 @@ describe('Order Model', () => {
 
     it('should create order using createOrder method', async () => {
       const result: OrderReturnType = await order.createOrder({
-        product_id: 1,
-        quantity: 10,
         user_id: 1,
         status: 'active',
+        order_products: [
+          {
+            product_id: 1,
+            quantity: 10,
+          },
+        ],
       })
       expect(result).toEqual({
         id: 1,
-        product_id: 1,
-        quantity: 10,
         user_id: 1,
         status: 'active',
+        quantity: 10,
+        product_id: 1,
+        order_id: 1,
       })
     })
     it('should return all orders of user using getOrders method', async () => {
@@ -70,10 +81,11 @@ describe('Order Model', () => {
       expect(result).toEqual([
         {
           id: 1,
-          product_id: 1,
-          quantity: 10,
           user_id: 1,
           status: 'active',
+          quantity: 10,
+          product_id: 1,
+          order_id: 1,
         },
       ])
     })
@@ -81,23 +93,23 @@ describe('Order Model', () => {
       const result: OrderReturnType = await order.getCurrentOrderByUserId(1)
       expect(result).toEqual({
         id: 1,
-        product_id: 1,
-        quantity: 10,
         user_id: 1,
         status: 'active',
+        quantity: 10,
+        product_id: 1,
+        order_id: 1,
       })
     })
     it('should return active orders of user using getActiveOrdersByUserId method', async () => {
-      const result: OrderReturnType[] = await order.getActiveOrdersByUserId(1)
-      expect(result).toEqual([
-        {
-          id: 1,
-          product_id: 1,
-          quantity: 10,
-          user_id: 1,
-          status: 'active',
-        },
-      ])
+      const result: OrderReturnType = await order.getActiveOrdersByUserId(1)
+      expect(result).toEqual({
+        id: 1,
+        user_id: 1,
+        status: 'active',
+        quantity: 10,
+        product_id: 1,
+        order_id: 1,
+      })
     })
     it('should return completed orders of user using getCompletedOrdersByUserId method', async () => {
       const result: OrderReturnType[] = await order.getCompletedOrdersByUserId(
@@ -106,14 +118,12 @@ describe('Order Model', () => {
       expect(result).toEqual([])
     })
     it('should update order status using updateOrderStatus method', async () => {
-      const result: OrderReturnType = await order.updateOrderStatus(
+      const result: OrderUpdateReturnType = await order.updateOrderStatus(
         'complete',
         1
       )
       expect(result).toEqual({
         id: 1,
-        product_id: 1,
-        quantity: 10,
         user_id: 1,
         status: 'complete',
       })
@@ -122,10 +132,11 @@ describe('Order Model', () => {
       const result: OrderReturnType = await order.deleteOrder(1)
       expect(result).toEqual({
         id: 1,
-        product_id: 1,
-        quantity: 10,
         user_id: 1,
-        status: 'complete',
+        status: 'active',
+        quantity: 10,
+        product_id: 1,
+        order_id: 1,
       })
     })
   })

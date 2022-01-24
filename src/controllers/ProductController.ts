@@ -19,7 +19,7 @@ ProductController.get('/:id', async (req: Request, res: Response) => {
 })
 // Get products by category
 ProductController.get('/cat/:category', async (req: Request, res: Response) => {
-  const category: string = String(req.params.category)
+  const category = String(req.params.category)
   const productByCat: ProductType[] = await product.getProductByCat(category)
   return res.json(productByCat)
 })

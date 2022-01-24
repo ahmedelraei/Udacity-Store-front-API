@@ -35,7 +35,7 @@ OrderController.get(
   authToken,
   async (req: Request, res: Response) => {
     const userId: number = parseInt(req.params.user_id)
-    const activeOrder: OrderReturnType[] = await order.getActiveOrdersByUserId(
+    const activeOrder: OrderReturnType = await order.getActiveOrdersByUserId(
       userId
     )
     return res.json(activeOrder)
@@ -80,6 +80,7 @@ OrderController.delete(
 )
 // create order
 OrderController.post('/', authToken, async (req: Request, res: Response) => {
-  const newOrder: OrderType = await order.createOrder(req.body)
+  console.log(req.body)
+  const newOrder: OrderReturnType = await order.createOrder(req.body)
   return res.json(newOrder)
 })

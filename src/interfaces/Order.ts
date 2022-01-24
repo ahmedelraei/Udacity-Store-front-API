@@ -1,14 +1,17 @@
 /* eslint-disable camelcase */
+
+import { OrderProductType } from './Order_products'
+
 export interface OrderType {
-  product_id: number
-  quantity: number
   user_id: number
-  status: string
+  status?: string
+  order_products: [OrderProductType]
 }
 export interface OrderReturnType {
   id: number
-  product_id: number
-  quantity: number
   user_id: number
   status: string
+  quantity: number
+  product_id: number
+  order_id: number
 }

@@ -72,15 +72,13 @@ describe('Test endpoint responses', () => {
     })
   })
   it('create user api endpoint', async () => {
-    const res = await request
-      .post('/users')
-      .set('Authorization', 'Bearer ' + token)
+    const res = await request.post('/users')
 
     expect(res.status).toBe(200)
     expect(res.body.auth).toEqual(true)
     expect(res.body.token).toBeDefined()
   })
-  it('delets a user api endpoint', async () => {
+  it('deletes a user api endpoint', async () => {
     const res = await request
       .delete('/users/1')
       .set('Authorization', 'Bearer ' + token)
