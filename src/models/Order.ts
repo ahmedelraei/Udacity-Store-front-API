@@ -2,6 +2,11 @@ import { OrderReturnType, OrderType } from '../interfaces/Order'
 import { pool } from '../db'
 import { OrderProducts } from './Order_products'
 
+interface OrderUpdateReturnType {
+  id: number
+  user_id: number
+  status: string
+}
 export class Order {
   // define table
   table = 'orders'
@@ -97,7 +102,7 @@ export class Order {
   async updateOrderStatus(
     status: string,
     orderId: number
-  ): Promise<OrderReturnType> {
+  ): Promise<OrderUpdateReturnType> {
     try {
       const conn = await pool.connect()
       const sql = `UPDATE ${this.table} SET status=$1 WHERE id=$2 RETURNING *`
@@ -111,7 +116,7 @@ export class Order {
   }
 
   // delete an order
-  async deleteOrder(id: number): Promise<OrderReturnType> {
+  async deleteOrder(id: number): Promise<OrderUpdateReturnType> {
     try {
       const sql = `DELETE FROM ${this.table} WHERE id=$1 RETURNING *`
       const conn = await pool.connect()

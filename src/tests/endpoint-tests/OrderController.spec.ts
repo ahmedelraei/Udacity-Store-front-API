@@ -75,19 +75,13 @@ describe('Test Order endpoint responses', () => {
         id: 1,
         user_id: 1,
         status: 'active',
-        product_id: 13,
-        order_id: 1,
-        quantity: 1,
       })
     )
     spyOn(Order.prototype, 'deleteOrder').and.returnValue(
       Promise.resolve({
         id: 1,
         user_id: 2,
-        status: 'active',
-        product_id: 13,
-        order_id: 1,
-        quantity: 1,
+        status: 'complete',
       })
     )
   })
@@ -207,8 +201,8 @@ describe('Test Order endpoint responses', () => {
     expect(res.status).toBe(200)
     expect(res.body).toEqual({
       id: 1,
-      user_id: 1,
-      status: 'active',
+      user_id: 2,
+      status: 'complete',
     })
   })
 })

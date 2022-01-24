@@ -7,6 +7,12 @@ import { authToken } from '../middlewares/auth'
 export const OrderController: Router = Router()
 const order: Order = new Order()
 
+interface OrderUpdateReturnType {
+  id: number
+  user_id: number
+  status: string
+}
+
 // Get all orders by user id
 OrderController.get(
   '/:user_id',
@@ -59,7 +65,7 @@ OrderController.put('/', authToken, async (req: Request, res: Response) => {
   const orderId = parseInt(req.query.orderId as string)
 
   if (orderId && ['active', 'complete'].includes(status)) {
-    const updatedOrder: OrderReturnType = await order.updateOrderStatus(
+    const updatedOrder: OrderUpdateReturnType = await order.updateOrderStatus(
       status,
       orderId
     )
@@ -74,7 +80,7 @@ OrderController.delete(
   authToken,
   async (req: Request, res: Response) => {
     const id: number = parseInt(req.params.id)
-    const deletedOrder: OrderReturnType = await order.deleteOrder(id)
+    const deletedOrder: OrderUpdateReturnType = await order.deleteOrder(id)
     return res.json(deletedOrder)
   }
 )

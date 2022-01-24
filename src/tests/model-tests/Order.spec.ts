@@ -129,14 +129,11 @@ describe('Order Model', () => {
       })
     })
     it('should delete the correct order', async () => {
-      const result: OrderReturnType = await order.deleteOrder(1)
+      const result: OrderUpdateReturnType = await order.deleteOrder(1)
       expect(result).toEqual({
         id: 1,
         user_id: 1,
-        status: 'active',
-        quantity: 10,
-        product_id: 1,
-        order_id: 1,
+        status: 'complete',
       })
     })
   })
