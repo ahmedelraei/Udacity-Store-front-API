@@ -8,27 +8,43 @@ const user: User = new User()
 
 // select all users
 UserController.get('/', authToken, async (_: Request, res: Response) => {
-  const allUsers: UserReturnType[] = await user.getUsers()
-  return res.json(allUsers)
+  try {
+    const allUsers: UserReturnType[] = await user.getUsers()
+    return res.json(allUsers)
+  } catch (err) {
+    throw new Error(`Error: ${err}`)
+  }
 })
 // select user by id
 UserController.get('/:id', authToken, async (req: Request, res: Response) => {
-  const userId: number = parseInt(req.params.id)
-  const allUsers: UserReturnType = await user.getUserById(userId)
-  return res.json(allUsers)
+  try {
+    const userId: number = parseInt(req.params.id)
+    const allUsers: UserReturnType = await user.getUserById(userId)
+    return res.json(allUsers)
+  } catch (err) {
+    throw new Error(`Error: ${err}`)
+  }
 })
 // create a user
 UserController.post('/', async (req: Request, res: Response) => {
-  const newUser: UserCreatedReturnType = await user.createUser(req.body)
-  return res.json(newUser)
+  try {
+    const newUser: UserCreatedReturnType = await user.createUser(req.body)
+    return res.json(newUser)
+  } catch (err) {
+    throw new Error(`Error: ${err}`)
+  }
 })
 // delete a user by id
 UserController.delete(
   '/:id',
   authToken,
   async (req: Request, res: Response) => {
-    const id: number = parseInt(req.params.id)
-    const deletedOrder: UserReturnType = await user.deleteUser(id)
-    return res.json(deletedOrder)
+    try {
+      const id: number = parseInt(req.params.id)
+      const deletedOrder: UserReturnType = await user.deleteUser(id)
+      return res.json(deletedOrder)
+    } catch (err) {
+      throw new Error(`Error: ${err}`)
+    }
   }
 )

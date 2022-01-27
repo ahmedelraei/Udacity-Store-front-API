@@ -58,11 +58,12 @@ Table: User (id:serial[primary key], firstName:varchar(50)[not null], lastName:v
 #### Orders
 
 - id
-- id of each product in the order
-- quantity of each product in the order
 - user_id
 - status of order (active or complete)
 
-```
-Table: Orders (id:serial[primary key], product_id:integer(foreign key to products table), quantity:integer[default 1], user_id:integer(foreign key to users table), status:enum(active, complete)[not null])
-```
+#### Order_products
+
+- id
+- id of product
+- id of related order
+- quantity of the product
